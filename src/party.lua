@@ -4,10 +4,13 @@ local Agito = require("riders.agito")
 local Party = {}
 
 local RIDER_DATA = { kuuga = Kuuga, agito = Agito }
+Party.RIDER_ORDER = { "kuuga", "agito" }
 
 local function xpToNext(level)
     return level * 20
 end
+
+Party.xpToNext = xpToNext
 
 local function newRiderInstance(id)
     return {
@@ -23,13 +26,39 @@ end
 function Party.newGame()
     return {
         active = "kuuga",
-        bench = { "agito" },
+        bench = {},
         riders = {
             kuuga = newRiderInstance("kuuga"),
-            agito = newRiderInstance("agito"),
         },
         flags = {},
+        items = {},
     }
+end
+
+function Party.addItem(party, itemId, count)
+    party.items[itemId] = (party.items[itemId] or 0) + (count or 1)
+end
+
+function Party.useItemHeal(party, itemId, riderId, amount)
+    if not party.items[itemId] or party.items[itemId] <= 0 then return false end
+    local instance = party.riders[riderId]
+    if not instance then return false end
+
+    instance.hp = math.min(Party.getMaxHP(instance), instance.hp + amount)
+    party.items[itemId] = party.items[itemId] - 1
+    if party.items[itemId] <= 0 then party.items[itemId] = nil end
+    return true
+end
+
+function Party.consumeItem(party, itemId)
+    if not party.items[itemId] or party.items[itemId] <= 0 then return false end
+    party.items[itemId] = party.items[itemId] - 1
+    if party.items[itemId] <= 0 then party.items[itemId] = nil end
+    return true
+end
+
+function Party.isOwned(party, id)
+    return party.riders[id] ~= nil
 end
 
 function Party.getData(id)
