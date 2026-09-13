@@ -6,6 +6,7 @@ local Agito = {
     baseForm = "ground",
     baseMaxHP = 58,
     color = { 0.95, 0.8, 0.15 },
+    catchphrase = "Agito steps forward, ready to fight!",
     worldGlyph = "Ω",
     sprite = { " o ", "(V)", "/ \\" },
     progressionUnlock = {
@@ -15,10 +16,10 @@ local Agito = {
         message = "Agito unlocked Trinity Form!",
     },
     forms = {
-        ground = { label = "Ground Form", attack = 20, defense = 20, speed = 20 },
-        storm = { label = "Storm Form", attack = 14, defense = 16, speed = 34 },
-        flame = { label = "Flame Form", attack = 28, defense = 16, speed = 14 },
-        trinity = { label = "Trinity Form", attack = 26, defense = 24, speed = 26 },
+        ground = { label = "Ground Form", attack = 20, defense = 20, speed = 20, color = { 0.85, 0.55, 0.2 } },
+        storm = { label = "Storm Form", attack = 14, defense = 16, speed = 34, color = { 0.3, 0.55, 0.9 } },
+        flame = { label = "Flame Form", attack = 28, defense = 16, speed = 14, color = { 0.9, 0.3, 0.2 } },
+        trinity = { label = "Trinity Form", attack = 26, defense = 24, speed = 26, color = { 0.3, 0.28, 0.35 } },
     },
 }
 
