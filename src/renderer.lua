@@ -42,6 +42,18 @@ function Renderer.drawBox(col, row, width, height, color)
     Renderer.drawCell(col + width - 1, row + height - 1, "┘", color)
 end
 
+function Renderer.drawSprite(col, row, lines, color)
+    for dy, line in ipairs(lines) do
+        local dx = 0
+        for ch in line:gmatch("[%z\1-\127\194-\253][\128-\191]*") do
+            if ch ~= " " then
+                Renderer.drawCell(col + dx, row + dy - 1, ch, color)
+            end
+            dx = dx + 1
+        end
+    end
+end
+
 local function barColor(ratio)
     if ratio < 0.3 then
         return { 0.9, 0.2, 0.2 }
