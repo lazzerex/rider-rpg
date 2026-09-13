@@ -17,6 +17,10 @@ local continueButton
 local resolveTurn
 local buildMoveButtons
 
+local BACKDROP_STARS = { "  .     *      .   ", "     ( )           " }
+local BACKDROP_HILLS = { "  __          __    ", " /  \\____/\\__/  \\   " }
+local BACKDROP_GROUND = { "~~~~~~~~~~~~~~~~~~~~", " ' . ' . ' . ' . '  " }
+
 local GROWTH = { attack = 2, defense = 2, speed = 1 }
 
 local function newCombatant(opts)
@@ -30,6 +34,8 @@ local function newCombatant(opts)
         currentFormKey = opts.baseFormKey,
         moves = opts.moves,
         unlocked = opts.unlocked or {},
+        color = opts.color or { 1, 1, 1 },
+        sprite = opts.sprite or { "o", "|" },
         maxHP = maxHP,
         hp = opts.hp or maxHP,
         maxEnergy = 100,
@@ -245,6 +251,7 @@ function Battle.enter(payload)
         forms = riderData.forms, baseFormKey = instance.baseFormKey,
         moves = riderData.moves, unlocked = instance.unlocked,
         baseMaxHP = riderData.baseMaxHP, hp = instance.hp,
+        color = riderData.color, sprite = riderData.sprite,
     })
 
     local enemyLevel = (payload and payload.enemyLevel) or instance.level
@@ -284,8 +291,17 @@ local function drawCombatant(kind, combatant, row)
 end
 
 function Battle.draw()
+    Renderer.drawSprite(44, 1, BACKDROP_STARS, { 0.55, 0.55, 0.68 })
+    Renderer.drawSprite(44, 3, BACKDROP_HILLS, { 0.32, 0.36, 0.44 })
+    Renderer.drawSprite(44, 5, BACKDROP_GROUND, { 0.34, 0.32, 0.3 })
+
     drawCombatant("enemy", enemy, 2)
     drawCombatant("player", player, 5)
+
+    local enemyTint = enemy.flashTimer > 0 and { 1, 0.3, 0.3 } or enemy.color
+    local playerTint = player.flashTimer > 0 and { 1, 0.3, 0.3 } or player.color
+    Renderer.drawSprite(50, 1, enemy.sprite, enemyTint)
+    Renderer.drawSprite(50, 4, player.sprite, playerTint)
 
     Renderer.drawBox(2, 19, 60, 7)
     for i, line in ipairs(log) do
